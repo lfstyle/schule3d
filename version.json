@@ -1,6 +1,6 @@
 {
-    "commit":  "5fd55b9",
-    "message":  "Veröffentlichen auf GitHub Pages (eigenes Repo lfstyle/schule3d), Telemetrie dort aus",
-    "deployed":  "2026-11-12T15:55:09+01:00",
+    "commit":  "b06bd16",
+    "message":  "pages.ps1: absolute Pfade, damit .nojekyll und README.md im Paket landen",
+    "deployed":  "2026-11-12T15:55:47+01:00",
     "telemetry":  false
 }
