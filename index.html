@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schule 3D – Entdecke die Schule</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/build/three.module.js",
+        "three/addons/": "./vendor/three/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div id="info-markers"></div>
+    <div id="area-label">Aufenthaltsraum</div>
+    <canvas id="minimap"></canvas>
+    <div id="crosshair"></div>
+    <div id="prompt" class="hidden"></div>
+    <aside id="info-card" class="hidden" aria-live="polite">
+      <div id="info-head"><p id="info-kicker" class="hidden"></p><div id="tour-dots" class="hidden"></div></div>
+      <h2 id="info-title"></h2>
+      <span id="info-badge" class="hidden" title="Text nach den Fotos beschrieben, von der Schule noch nicht geprüft">Entwurf</span>
+      <p id="info-text"></p>
+      <div id="tour-bar" class="hidden"></div>
+    </aside>
+    <div id="hint" class="hidden"></div>
+  </div>
+  <div id="tour-fade"></div>
+
+  <!-- Start- und Pausebildschirm -->
+  <div id="overlay">
+    <div class="panel">
+      <p class="eyebrow">Ein Rundgang durch unsere Schule</p>
+      <h1 id="overlay-title">Schule 3D</h1>
+      <p class="lead" id="overlay-text">Entdecke die Unterrichtsräume, Flure und den Innenhof — nachgebaut anhand unserer Fotos.</p>
+      <div class="school-facts"><span>15 begehbare Bereiche</span><span>Innen &amp; außen</span><span>Geführter Rundgang</span><span>Frei erkunden</span></div>
+      <p id="loading-status" role="status" aria-live="polite">Die Schule wird vorbereitet …</p>
+      <!-- Start: Rundgang als Hauptknopf, frei erkunden darunter. Pause: Weiter als Hauptknopf (main.js setMenuMode). -->
+      <div id="menu-buttons">
+        <button id="tour-btn" class="primary-btn" type="button" disabled>Lädt …</button>
+        <button id="start-btn" class="secondary-btn" type="button" disabled>Frei erkunden</button>
+        <button id="tour-end-btn" class="secondary-btn hidden" type="button">Rundgang beenden und frei erkunden</button>
+      </div>
+      <details id="tour-stations" class="help hidden"><summary>Stationen des Rundgangs</summary>
+        <ol id="tour-list"></ol>
+      </details>
+      <button id="restart-btn" class="secondary-btn hidden" type="button">Zum Startpunkt zurück</button>
+      <button id="photo-btn" class="secondary-btn" type="button" disabled>Foto &amp; Präsentation</button>
+      <button id="retry-btn" class="secondary-btn hidden" type="button" onclick="location.reload()">Erneut laden</button>
+
+      <details id="settings">
+        <summary>Einstellungen</summary>
+        <div class="settings-grid">
+          <label for="set-sensitivity">Mausempfindlichkeit</label>
+          <div class="range"><input id="set-sensitivity" type="range" min="0.3" max="2.5" step="0.05"><output></output></div>
+
+          <label for="set-fov">Sichtfeld</label>
+          <div class="range"><input id="set-fov" type="range" min="60" max="95" step="1"><output></output></div>
+
+          <label for="set-volume">Lautstärke</label>
+          <div class="range"><input id="set-volume" type="range" min="0" max="1" step="0.05"><output></output></div>
+
+          <label for="set-quality">Grafik</label>
+          <select id="set-quality">
+            <option value="hoch">Hoch (mit weichen Schatten in Ecken)</option>
+            <option value="mittel">Mittel</option>
+            <option value="niedrig">Niedrig</option>
+            <option value="sehr-niedrig">Sehr niedrig (schwache PCs)</option>
+            <option value="minimal">Minimal (sehr schwache PCs)</option>
+            <option value="benutzerdefiniert" disabled>Benutzerdefiniert</option>
+          </select>
+
+          <label for="set-fps">Bildrate</label>
+          <select id="set-fps">
+            <option value="30">Maximal 30 FPS</option>
+            <option value="60">Maximal 60 FPS</option>
+            <option value="0">Unbegrenzt</option>
+          </select>
+
+          <label for="set-dynres">Bei Ruckeln Auflösung senken</label>
+          <input id="set-dynres" type="checkbox">
+
+          <label for="set-flight">Rundgang als Kamerafahrt</label>
+          <input id="set-flight" type="checkbox">
+
+          <label for="set-time">Tageszeit</label>
+          <select id="set-time">
+            <option value="morgen">Morgen</option>
+            <option value="mittag">Mittag</option>
+            <option value="abend">Abend</option>
+            <option value="nacht">Nacht</option>
+          </select>
+
+          <label for="set-invert">Maus umkehren</label>
+          <input id="set-invert" type="checkbox">
+        </div>
+        <details id="advanced-graphics">
+          <summary>Erweiterte Grafikeinstellungen</summary>
+          <div class="settings-grid">
+            <label for="set-render-scale">Renderauflösung</label>
+            <div class="range"><input id="set-render-scale" type="range" min="50" max="100" step="5"><output></output></div>
+
+            <label for="set-shadows">Schatten</label>
+            <select id="set-shadows">
+              <option value="hoch">Hoch (weich)</option>
+              <option value="mittel">Mittel</option>
+              <option value="niedrig">Niedrig</option>
+              <option value="aus">Aus</option>
+            </select>
+
+            <label for="set-antialias">Kantenglättung</label>
+            <input id="set-antialias" type="checkbox">
+
+            <label for="set-ao">Umgebungsverdeckung</label>
+            <input id="set-ao" type="checkbox">
+
+            <label for="set-env">Reflexionen</label>
+            <input id="set-env" type="checkbox">
+
+            <label for="set-view">Sichtweite</label>
+            <select id="set-view">
+              <option value="weit">Weit</option>
+              <option value="mittel">Mittel</option>
+              <option value="nah">Nah</option>
+            </select>
+
+            <label for="set-textures">Texturen</label>
+            <select id="set-textures">
+              <option value="voll">Volle Größe</option>
+              <option value="komprimiert">Komprimiert (spart Grafikspeicher)</option>
+              <option value="halb">Komprimiert, halbe Größe</option>
+            </select>
+          </div>
+        </details>
+        <button id="reset-settings" class="link-btn" type="button">Zurücksetzen</button>
+      </details>
+
+      <details class="help"><summary>So bewegst du dich durch die Schule</summary>
+      <ul class="controls">
+        <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>Bewegen</span></li>
+        <li><kbd>Maus</kbd><span>Umsehen</span></li>
+        <li><kbd>Shift</kbd><span>Schneller laufen</span></li>
+        <li><kbd>Leertaste</kbd><span>Springen</span></li>
+        <li><kbd>C</kbd><span>Ducken (gedrückt halten)</span></li>
+        <li><kbd>Z</kbd><span>Heranzoomen / Schilder lesen (gedrückt halten)</span></li>
+        <li><kbd>E</kbd><span>Benutzen, aufheben, ablegen, Info-Punkt (i) öffnen</span></li>
+        <li><kbd>N</kbd><span>Rundgang: nächste Station (mit Shift: vorherige)</span></li>
+        <li><kbd>R</kbd><span>Jalousie hoch/runter, Stiftfarbe wechseln</span></li>
+        <li><kbd>Maus</kbd><span>Linke Taste halten: auf Whiteboards zeichnen</span></li>
+        <li><kbd>F</kbd><span>Taschenlampe an/aus</span></li>
+        <li><kbd>M</kbd><span>Karte (klein / groß / aus)</span></li>
+        <li><kbd>B</kbd><span>Geschoss auf der großen Karte wählen</span></li>
+        <li><kbd>T</kbd><span>Tageszeit wechseln</span></li>
+        <li><kbd>Esc</kbd><span>Pause &amp; Maus freigeben</span></li>
+        <li><kbd>F3</kbd><span>Leistungsanzeige</span></li>
+        <li><kbd>P</kbd><span>Fotomodus</span></li>
+      </ul>
+      </details>
+      <p class="version" id="build-version">Lokaler Entwicklungsstand · nicht veröffentlicht</p>
+      <p class="version hidden" id="telemetry-note">Das Spiel meldet Ladezeit, Grafikkarte und beim Spielen alle 2 Minuten die Bildrate an den Server; dabei wird die IP-Adresse 14 Tage gespeichert. Keine Cookies, nichts im Browser gespeichert.</p>
+    </div>
+  </div>
+
+  <div id="graphics-busy" class="hidden" role="status" aria-live="polite">Grafik wird umgestellt …</div>
+
+  <section id="photo-panel" class="hidden" aria-label="Fotomodus">
+    <strong>Foto &amp; Präsentation</strong>
+    <label for="photo-view">Ansicht</label>
+    <select id="photo-view"><option value="current">Mein Blickwinkel</option></select>
+    <label for="photo-fov">Bildausschnitt</label>
+    <input id="photo-fov" type="range" min="40" max="95" step="1" aria-label="Sichtfeld des Fotos">
+    <button id="photo-save" type="button">Bild speichern</button>
+    <button id="compare-btn" class="hidden" type="button">Mit Foto vergleichen</button>
+    <button id="photo-close" type="button">Zurück (Esc)</button>
+    <small id="photo-status" role="status"></small>
+  </section>
+  <img id="compare-img" class="hidden" alt="Originalfoto zum Vergleich">
+  <div id="compare-line" class="hidden"></div>
+  <section id="compare-panel" class="hidden" aria-label="Vergleich mit Foto">
+    <strong>Vergleich mit Originalfoto</strong>
+    <label for="compare-folder">Ordner</label>
+    <select id="compare-folder"></select>
+    <label for="compare-file">Foto</label>
+    <select id="compare-file"></select>
+    <label class="compare-disk">oder von der Festplatte <input id="compare-disk" type="file" accept="image/*"></label>
+    <label for="compare-opacity">Deckkraft</label>
+    <input id="compare-opacity" type="range" min="0" max="1" step="0.05" value="1">
+    <label for="compare-wipe">Trennlinie</label>
+    <input id="compare-wipe" type="range" min="0" max="100" step="1" value="50">
+    <button id="compare-save" type="button">Ansicht speichern</button>
+    <button id="compare-copy" type="button">Ansicht kopieren</button>
+    <button id="compare-close" type="button">Zurück (Esc)</button>
+    <small id="compare-status" role="status"></small>
+  </section>
+  <noscript>Dieses Spiel benötigt JavaScript und WebGL.</noscript>
+  <script type="module" src="js/boot.js"></script>
+</body>
+</html>

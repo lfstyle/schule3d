@@ -1,0 +1,134 @@
+{
+  "hinweis": "Texte und Positionen für Rundgang und Info-Punkte der Kaufmännischen Schule Ehingen (KSE). Fakten von www.ksehingen.de (Stand 26.10.2026) und aus den Fotos; Quellen je Text in verification/RUNDGANG.md. \"entwurf\": true zeigt auf der Karte den Hinweis „Entwurf“. standpunkt/pos: [x, y, z(, Blick, Neigung)] in Metern, y = Fußboden; Blick 0 = Norden, π/2 = Westen.",
+  "stationen": [
+    {
+      "id": "station_vorplatz",
+      "titel": "Willkommen an der KSE",
+      "standpunkt": [23.5, -0.93, -4.2, 1.5708, 0.02],
+      "text": "Willkommen an der Kaufmännischen Schule Ehingen! Unter einem Dach gibt es hier das Wirtschaftsgymnasium, das Internationale Wirtschaftsgymnasium, mehrere Berufskollegs, die Berufsfachschule Wirtschaft und die Kaufmännische Berufsschule. Dieser Eingang an der Bucksgässle führt direkt zu den Computerräumen 130 und 131.",
+      "info": []
+    },
+    {
+      "id": "station_131",
+      "titel": "Raum 131 · Datenverarbeitung",
+      "standpunkt": [15.35, 1.53, -2.75, 3.1416, -0.05],
+      "licht": "licht_131",
+      "tueren": ["flur2_131"],
+      "text": "Einer der Computerräume der Schule: 18 Schülerplätze und ein Lehrerplatz mit Beamer. Arbeit am Computer gehört an einer kaufmännischen Schule in fast allen Fächern dazu.",
+      "info": []
+    },
+    {
+      "id": "station_foyer",
+      "titel": "Foyer",
+      "standpunkt": [4.7, 0, -1.15, 0.58, 0.02],
+      "licht": "licht_flur",
+      "text": "Das Foyer ist der Knotenpunkt im Erdgeschoss. Von hier geht es ins Zukunftslabor (125), ins Podcaststudio (127), in den Aufenthaltsraum, in Flur 1 und hinaus in den Innenhof. Die blaue Treppe mit den gelben Kanten führt nach oben zu den Computerräumen, Klassenzimmern und zum Sekretariat.",
+      "info": ["info_foyer_smv", "info_foyer_erasmus", "info_foyer_kummerkasten"]
+    },
+    {
+      "id": "station_futurelab",
+      "titel": "Zukunftslabor (Future Lab)",
+      "standpunkt": [-4.05, 0, -11.6, 0.85, -0.08],
+      "licht": "licht_futurelab",
+      "tueren": ["tuer_125"],
+      "text": "Das Zukunftslabor ist ein Ort zum Experimentieren: Was im Unterricht theoretisch gelernt wird, kann hier praktisch ausprobiert werden, auch fächerübergreifend. In zwei verbundenen Räumen auf zwei Ebenen gibt es Robotik, 3D-Druck, Lasercutter, Fräse, Plotter und Virtual Reality.",
+      "info": ["info_lab_3ddrucker", "info_lab_robotik", "info_lab_vr", "info_lab_lasercutter", "info_lab_cnc", "info_lab_plotter", "info_lab_presse", "info_lab_stickmaschine"]
+    },
+    {
+      "id": "station_podcast",
+      "titel": "Video- und Podcaststudio",
+      "standpunkt": [4.8, 0, -8.15, -1.05, -0.09],
+      "licht": "licht_podcast",
+      "tueren": ["tuer_027"],
+      "text": "Der dritte Raum des Zukunftslabors ist das Video- und Podcaststudio. Hier entstehen Medienprojekte: Podcasts am Aufnahmeplatz, Präsentationen und Filme vor dem Greenscreen. Holzlamellen an den Wänden dämpfen den Hall.",
+      "info": ["info_podcast_greenscreen", "info_podcast_mikrofone"]
+    },
+    {
+      "id": "station_aufenthaltsraum",
+      "titel": "Aufenthaltsraum",
+      "standpunkt": [3.6, 0, 1.7, 2.75, -0.05],
+      "licht": "licht_aufenthaltsraum",
+      "tueren": ["tuer_aufenthaltsraum_flur"],
+      "text": "Der Aufenthaltsraum ist für Pausen und Freistunden da: Tische, Stehtische, eine Küchenzeile und oben eine Empore. Eine Autotür und eine Motorhaube mit „ABI 2021“ an den Wänden erinnern an frühere Abschlussjahrgänge.",
+      "info": ["info_aufenthalt_kueche", "info_aufenthalt_motorhaube"]
+    },
+    {
+      "id": "station_hof",
+      "titel": "Innenhof",
+      "standpunkt": [-3.4, 0, 0.8, 3.1416, -0.12],
+      "tueren": ["haupteingang"],
+      "text": "Durch die blaue Doppeltür im Foyer kommt man in den Innenhof, eingerahmt vom Schulgebäude und einer alten Natursteinmauer. Unter dem großen Baum stehen Stehtische für die Pause. Links führt der Mauerweg zum Eingang an der Bucksgässle, rechts der Gartenweg mit dem Metallsteg.",
+      "info": []
+    },
+    {
+      "id": "station_flur3",
+      "titel": "Flur 3 · Leitbild",
+      "standpunkt": [4.0, 3.62, -4.6, 2.5, 0.02],
+      "licht": "licht_flur3",
+      "text": "Die obere Halle über dem Foyer ist ein Aufenthaltsbereich mit Hochtischen vor den großen Fenstern. An der Wand hängen die Banner mit dem Leitbild der Schule, auf den Tafeln stehen Ausbildungsangebote. Die Treppe führt weiter zu Flur 4 und zum Sekretariat.",
+      "info": ["info_flur3_tafeln"]
+    },
+    {
+      "id": "station_sekretariat",
+      "titel": "Sekretariat 228",
+      "standpunkt": [9.0, 5.55, -8.4, -1.5708, 0],
+      "licht": "licht_sekretariat",
+      "tueren": ["flur4_sekretariat"],
+      "text": "Hinter der Glasfront liegt das Sekretariat, die erste Anlaufstelle für Schülerinnen, Schüler und Eltern. Daneben befinden sich die Büros der Schulleitung (Räume 225 – 231). Das Motto der Schulleitung lautet „kooperativ statt direktiv“.",
+      "info": ["info_sekretariat_theke"]
+    },
+    {
+      "id": "station_flur5",
+      "titel": "Flur 5",
+      "standpunkt": [0, 7.48, -4.5, 1.5708, 0],
+      "licht": "licht_flur5",
+      "text": "Ein heller Aufenthaltsbereich mit Hochtischen und PC-Plätzen am Fenster, zum Arbeiten zwischen den Stunden. Über dem Treppenhaus liegt ein schräges Glasdach, die Treppe führt weiter zu den Klassenzimmern 314 – 319.",
+      "info": ["info_flur5_pcs"]
+    },
+    {
+      "id": "station_schulgasse",
+      "titel": "Haupteingang Schulgasse",
+      "standpunkt": [-15.6, -0.62, -24.0, 3.1416, 0.1],
+      "text": "Der Haupteingang der KSE liegt an der Schulgasse 11 in Ehingen (Donau). Stufen und eine Rampe führen unter die Arkade zu den drei roten Türen und in die Eingangshalle von Flur 1. Danke fürs Mitkommen – über das Menü (Esc) kannst du jede Station wieder besuchen.",
+      "info": []
+    }
+  ],
+  "info": [
+    { "id": "info_foyer_smv", "titel": "SMV", "pos": [-1.65, 2.55, -7.65],
+      "text": "Der frühere SMV-Raum 126 gehört heute als Werkstatt zum Zukunftslabor. Die SMV selbst vertritt die Interessen der Schülerinnen und Schüler gegenüber Lehrkräften und Schulleitung. Sie organisiert unter anderem „Schüler helfen Schülern“, Nikolausaktion, Valentinsrosen, Blutspende, Sportturniere und Projekttage." },
+    { "id": "info_foyer_erasmus", "titel": "Europaschule", "pos": [0.8, 2.1, -0.55],
+      "text": "Seit Februar 2025 ist die KSE eine von 50 Europaschulen in Baden-Württemberg. Berufsschüler machen zwei Wochen Betriebspraktikum in Dublin und wohnen in Gastfamilien, Schüler des Wirtschaftsgymnasiums besuchen einen Spanischkurs bei Madrid, und es gibt einen Austausch mit Mulhouse. Die Tafeln zeigen Eindrücke davon." },
+    { "id": "info_foyer_kummerkasten", "titel": "Kummerkasten", "pos": [5.08, 2.05, -6.6],
+      "text": "In den Kummerkasten kann man Sorgen, Fragen oder Anregungen anonym einwerfen. Zusätzlich gibt es an der KSE Beratungsangebote für Schülerinnen und Schüler." },
+    { "id": "info_lab_3ddrucker", "titel": "3D-Druck", "pos": [-11.95, 1.0, -16.45],
+      "text": "Mit Bambu-Lab-3D-Druckern und einem 3D-Scanner lernen Schülerinnen und Schüler, wie aus einem digitalen Modell ein echtes Objekt wird – vom Konstruieren am PC bis zum fertigen Druck. Daneben lagern die Filamentrollen." },
+    { "id": "info_lab_robotik", "titel": "Robotik", "pos": [-7.1, 0.95, -16.45],
+      "text": "Roboterarme vom Typ Dobot Magician mit Förderband, der Fahrroboter Robomaster EP, Lerndrohnen und Arduino-Bausätze. Alle lassen sich mit Scratch oder Python programmieren – zum Beispiel im Unterricht in (Wirtschafts-)Informatik." },
+    { "id": "info_lab_vr", "titel": "Virtual Reality", "pos": [-8.15, 0.95, -14.6],
+      "text": "Mit VR-Brillen (Meta Quest 2) lassen sich virtuelle Welten erkunden, etwa der menschliche Körper in Biologie oder historische Orte in Geschichte. Mit 360°-Kameras entstehen eigene virtuelle Rundgänge." },
+    { "id": "info_lab_lasercutter", "titel": "Lasercutter", "pos": [-0.5, 1.45, -15.15],
+      "text": "Der Lasercutter xTool P2 schneidet und graviert Holz, Acryl und andere Materialien nach einer Vorlage vom PC. Die Abluft wird durch das Fenster nach draußen geführt." },
+    { "id": "info_lab_cnc", "titel": "CNC-Fräse", "pos": [-0.75, 1.6, -10.85],
+      "text": "Eine Sorotec-Flachbettfräse in einer durchsichtigen Einhausung. Sie fräst Formen nach einem digitalen Plan aus Holz oder Kunststoff." },
+    { "id": "info_lab_plotter", "titel": "Schneideplotter", "pos": [-1.6, 1.45, -12.88],
+      "text": "Der Schneideplotter (Summa) schneidet Folien nach einer Vektorgrafik, zum Beispiel für Aufkleber oder Motive auf Textilien. In Workshops lernt man dafür das Vektorisieren." },
+    { "id": "info_lab_presse", "titel": "Transferpresse", "pos": [-1.7, 1.3, -14.0],
+      "text": "Mit der Transferpresse (Stahls Hotronix) werden geplottete Motive mit Hitze auf T-Shirts und andere Textilien gedruckt. Daneben steht eine Kappenpresse." },
+    { "id": "info_lab_stickmaschine", "titel": "Stickmaschine", "pos": [-0.75, 1.55, -9.35],
+      "text": "Eine Stickmaschine mit vielen Garnfarben bestickt Textilien mit eigenen Motiven. Auch dazu bietet das Zukunftslabor Workshops an." },
+    { "id": "info_podcast_greenscreen", "titel": "Greenscreen", "pos": [1.4, 1.75, -8.67],
+      "text": "Grüner Stoff an Wand und Boden, dazu zwei Softboxen und ein Kamerastativ. Im Schnitt wird das Grün durch einen beliebigen Hintergrund ersetzt – für Präsentationen, Erklärvideos und Filme." },
+    { "id": "info_podcast_mikrofone", "titel": "Aufnahmeplatz", "pos": [7.3, 1.3, -8.7],
+      "text": "Drei Mikrofone an Gelenkarmen, Kopfhörer und ein Mischpult: Hier können bis zu drei Personen gleichzeitig einen Podcast aufnehmen und ihn am PC bearbeiten." },
+    { "id": "info_aufenthalt_kueche", "titel": "Küche", "pos": [5.6, 1.55, 1.35],
+      "text": "Die Küchenzeile hat Spüle, Mikrowelle, Wasserkocher und zwei Kaffeepadmaschinen. Im Spiel lassen sich Schranktüren und Schubladen mit E öffnen." },
+    { "id": "info_aufenthalt_motorhaube", "titel": "ABI 2021", "pos": [1.2, 2.3, 0.3],
+      "text": "Die Motorhaube mit „ABI 2021“ und die bemalte Autotür sind Erinnerungsstücke eines Abschlussjahrgangs. Das Wirtschaftsgymnasium der KSE gibt es seit dem Schuljahr 2007/08; es führt in drei Jahren zum Abitur." },
+    { "id": "info_flur3_tafeln", "titel": "Ausbildung", "pos": [2.75, 5.5, -1.0],
+      "text": "Auf den Tafeln hängen Ausbildungsplatzangebote." },
+    { "id": "info_sekretariat_theke", "titel": "Öffnungszeiten", "pos": [12.2, 6.95, -10.2],
+      "text": "Das Sekretariat ist montags bis freitags von 8 bis 12 Uhr geöffnet, montags und dienstags zusätzlich von 14 bis 16 Uhr. Erreichbar ist es unter 07391 702510 oder sekretariat@ksehingen.de." },
+    { "id": "info_flur5_pcs", "titel": "Arbeitsplätze", "pos": [-4.4, 8.9, -3.0],
+      "text": "Hier gibt es Arbeitsplätze für Schülerinnen und Schüler." }
+  ]
+}
