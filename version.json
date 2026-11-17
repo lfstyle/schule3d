@@ -1,6 +1,6 @@
 {
-    "commit":  "b06bd16",
-    "message":  "pages.ps1: absolute Pfade, damit .nojekyll und README.md im Paket landen",
-    "deployed":  "2026-11-12T15:55:47+01:00",
+    "commit":  "c0e1e38",
+    "message":  "Leichte Rundgang-Version für PC und iPad (rundgang.html)",
+    "deployed":  "2026-11-17T15:30:18+01:00",
     "telemetry":  false
 }

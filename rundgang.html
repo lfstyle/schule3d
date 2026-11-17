@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <!-- Rundgang (leichte Version): einfache Grafik, für PC und iPad, Rundgang im Vordergrund. Die volle Version ist index.html. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Schule 3D">
+  <meta name="theme-color" content="#14161a">
+  <title>Schule 3D – Rundgang (PC und iPad)</title>
+  <link rel="icon" href="data:,">
+  <link rel="manifest" href="rundgang.webmanifest">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="rundgang.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/build/three.module.js",
+        "three/addons/": "./vendor/three/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="rundgang mode-touch">
+  <div id="app"></div>
+
+  <!-- HUD (dieselben Elemente wie in index.html, damit Rundgang, Info-Punkte und Karte unverändert laufen) -->
+  <div id="hud" class="hidden">
+    <div id="info-markers"></div>
+    <div id="area-label"></div>
+    <canvas id="minimap"></canvas>
+    <div id="crosshair"></div>
+    <div id="prompt" class="hidden"></div>
+    <aside id="info-card" class="hidden scrollable" aria-live="polite">
+      <div id="info-head"><p id="info-kicker" class="hidden"></p><div id="tour-dots" class="hidden"></div></div>
+      <h2 id="info-title"></h2>
+      <span id="info-badge" class="hidden" title="Text nach den Fotos beschrieben, von der Schule noch nicht geprüft">Entwurf</span>
+      <p id="info-text"></p>
+      <div id="tour-bar" class="hidden"></div>
+    </aside>
+    <div id="hint" class="hidden"></div>
+  </div>
+
+  <!-- Touch-Bedienung -->
+  <div id="touch-ui" class="hidden">
+    <div id="joystick" aria-label="Laufen"><div id="joystick-knob"></div></div>
+    <div id="touch-top">
+      <button id="btn-text" type="button" aria-label="Text ein- oder ausblenden">Text</button>
+      <button id="btn-map" type="button" aria-label="Karte">Karte</button>
+      <button id="btn-menu" type="button" aria-label="Menü">Menü</button>
+    </div>
+    <div id="touch-right">
+      <button id="btn-use" type="button" class="hidden"></button>
+      <div id="tour-nav" class="hidden">
+        <button id="btn-prev" type="button" aria-label="Vorherige Station">◀</button>
+        <button id="btn-next" type="button">Weiter ▶</button>
+      </div>
+    </div>
+  </div>
+  <div id="tour-fade"></div>
+
+  <!-- Start- und Pausebildschirm -->
+  <div id="overlay">
+    <div class="panel scrollable">
+      <p class="eyebrow">Ein Rundgang durch unsere Schule</p>
+      <h1 id="overlay-title">Schule 3D</h1>
+      <p class="lead" id="overlay-text">Die Unterrichtsräume, Flure und der Innenhof – nachgebaut anhand unserer Fotos. Leichte Grafik, läuft flüssig am PC und auf dem iPad.</p>
+      <div id="device-choice" role="group" aria-labelledby="device-label">
+        <p id="device-label">Wie spielst du?</p>
+        <div class="device-buttons">
+          <button type="button" data-device="pc" aria-pressed="false"><b>Am PC</b><span>Maus und Tastatur</span></button>
+          <button type="button" data-device="touch" aria-pressed="false"><b>iPad / Tablet</b><span>mit dem Finger</span></button>
+        </div>
+      </div>
+      <p id="loading-status" role="status" aria-live="polite">Die Schule wird vorbereitet …</p>
+      <div id="menu-buttons">
+        <button id="tour-btn" class="primary-btn" type="button" disabled>Lädt …</button>
+        <button id="start-btn" class="secondary-btn" type="button" disabled>Frei erkunden</button>
+        <button id="tour-end-btn" class="secondary-btn hidden" type="button">Rundgang beenden und frei erkunden</button>
+      </div>
+      <details id="tour-stations" class="help hidden"><summary>Stationen des Rundgangs</summary>
+        <ol id="tour-list"></ol>
+      </details>
+      <button id="restart-btn" class="secondary-btn hidden" type="button">Zum Startpunkt zurück</button>
+      <button id="retry-btn" class="secondary-btn hidden" type="button" onclick="location.reload()">Erneut laden</button>
+
+      <details id="settings">
+        <summary>Einstellungen</summary>
+        <div class="settings-grid">
+          <label for="set-look">Umsehen (Empfindlichkeit)</label>
+          <div class="range"><input id="set-look" type="range" min="0.4" max="2.5" step="0.05"><output></output></div>
+
+          <label for="set-volume">Lautstärke</label>
+          <div class="range"><input id="set-volume" type="range" min="0" max="1" step="0.05"><output></output></div>
+
+          <label for="set-sharpness">Bildschärfe</label>
+          <select id="set-sharpness">
+            <option value="0.75">Weich (am flüssigsten)</option>
+            <option value="1">Normal</option>
+            <option value="1.5">Scharf</option>
+            <option value="2">Sehr scharf (nur neue Geräte)</option>
+          </select>
+
+          <label for="set-flight">Rundgang als Kamerafahrt</label>
+          <input id="set-flight" type="checkbox">
+
+          <label for="set-fps">Bildrate anzeigen</label>
+          <input id="set-fps" type="checkbox">
+        </div>
+      </details>
+
+      <details class="help"><summary>So bewegst du dich durch die Schule</summary>
+      <ul class="controls touch-help only-touch">
+        <li><b>Linker Kreis</b><span>Daumen darauf und schieben: laufen</span></li>
+        <li><b>Wischen</b><span>über das Bild: umsehen</span></li>
+        <li><b>Antippen</b><span>Tür oder (i)-Symbol in der Nähe antippen: öffnen</span></li>
+        <li><b>Weiter ▶</b><span>Rundgang: zur nächsten Station</span></li>
+        <li><b>Karte</b><span>klein / groß / aus</span></li>
+      </ul>
+      <p class="version only-touch">Tipp: In Safari über „Teilen → Zum Home-Bildschirm“ startet der Rundgang wie eine App im Vollbild.</p>
+      <ul class="controls only-pc">
+        <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>Bewegen</span></li>
+        <li><kbd>Maus</kbd><span>Umsehen</span></li>
+        <li><kbd>Shift</kbd><span>Schneller laufen</span></li>
+        <li><kbd>E</kbd><span>Tür öffnen, Info-Punkt (i) öffnen</span></li>
+        <li><kbd>N</kbd><span>Rundgang: nächste Station (mit Shift: vorherige)</span></li>
+        <li><kbd>H</kbd><span>Stationstext ein/aus</span></li>
+        <li><kbd>M</kbd><span>Karte (klein / groß / aus)</span></li>
+        <li><kbd>Esc</kbd><span>Pause &amp; Maus freigeben</span></li>
+      </ul>
+      </details>
+      <p class="version">Leichte Version (ohne Lampen, Schatten und Spiegelungen) · <a href="index.html">zur Version mit voller Grafik</a></p>
+    </div>
+  </div>
+  <noscript>Dieses Spiel benötigt JavaScript und WebGL.</noscript>
+  <script type="module" src="js/rundgang/start.js"></script>
+</body>
+</html>

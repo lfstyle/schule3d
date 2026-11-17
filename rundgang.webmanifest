@@ -1,0 +1,11 @@
+{
+  "name": "Schule 3D – Rundgang",
+  "short_name": "Schule 3D",
+  "start_url": "rundgang.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#14161a",
+  "theme_color": "#14161a",
+  "lang": "de"
+}
