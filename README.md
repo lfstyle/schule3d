@@ -5,4 +5,4 @@ Begehbare 3D-Nachbildung der Kaufmännischen Schule Ehingen im Browser (Three.js
 **Spielen:** <https://lfstyle.github.io/schule3d/>
 
 Dieses Repo enthält nur die veröffentlichten Spieldateien und wird automatisch aktualisiert.
-Stand: 3432dea – VR-Version für Meta Quest 2 (vr.html), erster Teststand (25.11.2026 16:40)
+Stand: 2cb23a3 – VR: Tunnelblick beim Laufen und Augenhöhe angleichen (Komfort) (25.11.2026 17:14)

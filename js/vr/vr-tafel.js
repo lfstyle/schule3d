@@ -211,6 +211,40 @@ export class VrEtikett {
   }
 }
 
+/** Kurzer Hinweis mitten im Blickfeld etwas unterhalb (z. B. „Augenhöhe angeglichen“), verschwindet nach einigen Sekunden. */
+export class VrHinweis {
+  constructor(camera) {
+    this.surface = new CanvasFlaeche(768, 120, 0.42, { order: 13 });
+    this.mesh = this.surface.mesh;
+    this.mesh.position.set(0, -0.16, -0.75);
+    this.mesh.visible = false;
+    camera.add(this.mesh);
+    this._time = 0;
+  }
+
+  show(text, seconds = 2.5) {
+    this._time = seconds;
+    this.mesh.visible = true;
+    this.surface.draw(text, (ctx, w, h) => {
+      ctx.font = `600 38px ${FONT}`;
+      const tw = Math.min(w - 8, ctx.measureText(text).width + 64);
+      ctx.fillStyle = 'rgba(20, 22, 26, 0.9)';
+      roundRect(ctx, (w - tw) / 2, 10, tw, h - 20, 30);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, w / 2, h / 2 + 2, w - 48);
+    });
+  }
+
+  update(dt) {
+    if (this._time <= 0) return;
+    this._time -= dt;
+    if (this._time <= 0) this.mesh.visible = false;
+  }
+}
+
 /** Bildraten-Anzeige (Y): hängt an der Kamera, oben links im Blickfeld (über der Tafel). Zweimal pro Sekunde neu. */
 export class VrAnzeige {
   constructor(camera) {

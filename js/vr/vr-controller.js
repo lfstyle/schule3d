@@ -1,6 +1,6 @@
 // VR-Version: Eingabe der Quest-Controller (und Ersatz am PC für den Probemodus).
 // Beide liefern jedes Bild dasselbe: read() → { move: {x, y}, turn: −1|0|1, trigger: Hand|null, a, b, x, y }
-// (Knöpfe nur im Moment des Drückens). Belegung (xr-standard der Quest Touch): buttons[0] Abzug, [4] A/X, [5] B/Y,
+// (Knöpfe nur im Moment des Drückens). Belegung (xr-standard der Quest Touch): buttons[0] Abzug, [3] Stick drücken (rechts: Augenhöhe), [4] A/X, [5] B/Y,
 // axes[2]/[3] Stick.
 // Controller-Modelle sind bewusst schlicht (ein Quader) und werden nicht aus dem Internet geladen
 // (XRControllerModelFactory bräuchte einen fremden Server und den GLTF-Lader).
@@ -55,7 +55,7 @@ export class VrHaende {
   }
 
   read() {
-    const out = { move: { x: 0, y: 0 }, turn: 0, trigger: null, a: false, b: false, x: false, y: false };
+    const out = { move: { x: 0, y: 0 }, turn: 0, trigger: null, a: false, b: false, x: false, y: false, height: false };
     const left = this.left, right = this.right;
     const axes = (h) => h?.source?.gamepad?.axes ?? [];
     const la = axes(left), ra = axes(right);
@@ -65,7 +65,7 @@ export class VrHaende {
     if (this._turnArmed && Math.abs(tx) > TURN_ON) { out.turn = Math.sign(tx); this._turnArmed = false; }
     else if (Math.abs(tx) < TURN_OFF) this._turnArmed = true;
     for (const h of this.hands) if (this._edge(h, 0)) { this.active = h; out.trigger = h; }
-    if (right) { out.a = this._edge(right, 4); out.b = this._edge(right, 5); }
+    if (right) { out.a = this._edge(right, 4); out.b = this._edge(right, 5); out.height = this._edge(right, 3); }
     if (left) { out.x = this._edge(left, 4); out.y = this._edge(left, 5); }
     if (!this.active?.source) this.active = right ?? left ?? null;
     return out;
@@ -100,7 +100,7 @@ export class VrHaende {
 
 // ------------------------------------------------------------------ Probemodus am PC (vr.html?desktop)
 // Maus ziehen = Kopf drehen (setzt die Kamera im Rig wie die Brille), W A S D = linker Stick, J/L = rechter Stick,
-// F = Abzug (Strahl aus der Blickmitte), N = A, B = B, X = X, Y = Y.
+// F = Abzug (Strahl aus der Blickmitte), N = A, B = B, X = X, Y = Y, H = rechten Stick drücken (Augenhöhe).
 export class DesktopEingabe {
   constructor(camera, dom) {
     this.camera = camera;
@@ -113,7 +113,7 @@ export class DesktopEingabe {
     document.addEventListener('keydown', (e) => {
       if (!this.enabled || e.repeat) return;
       this.keys.add(e.code);
-      if (['KeyF', 'KeyN', 'KeyB', 'KeyX', 'KeyY', 'KeyZ', 'KeyJ', 'KeyL'].includes(e.code)) this.queue.add(e.code);
+      if (['KeyF', 'KeyN', 'KeyB', 'KeyX', 'KeyY', 'KeyZ', 'KeyJ', 'KeyL', 'KeyH'].includes(e.code)) this.queue.add(e.code);
     });
     document.addEventListener('keyup', (e) => this.keys.delete(e.code));
     window.addEventListener('blur', () => this.keys.clear());
@@ -136,7 +136,7 @@ export class DesktopEingabe {
     const k = this.keys, q = this.queue;
     const x = (k.has('KeyD') ? 1 : 0) - (k.has('KeyA') ? 1 : 0), y = (k.has('KeyW') ? 1 : 0) - (k.has('KeyS') ? 1 : 0);
     const out = { move: { x, y }, turn: q.has('KeyL') ? 1 : q.has('KeyJ') ? -1 : 0, trigger: q.has('KeyF') ? this.active : null,
-      a: q.has('KeyN'), b: q.has('KeyB'), x: q.has('KeyX'), y: q.has('KeyY') || q.has('KeyZ') };
+      a: q.has('KeyN'), b: q.has('KeyB'), x: q.has('KeyX'), y: q.has('KeyY') || q.has('KeyZ'), height: q.has('KeyH') };
     q.clear();
     return out;
   }

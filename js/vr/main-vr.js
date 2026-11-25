@@ -31,8 +31,8 @@ import { removeLocalLights, simplifyMaterials, shrinkTextures } from '../rundgan
 import { installDetailCulling } from '../rundgang/details-ausblenden.js';
 import { VrPlayer } from './vr-spieler.js';
 import { VrHaende, DesktopEingabe } from './vr-controller.js';
-import { VrTafel, VrEtikett, VrAnzeige } from './vr-tafel.js';
-import { VrBlende } from './vr-blende.js';
+import { VrTafel, VrEtikett, VrAnzeige, VrHinweis } from './vr-tafel.js';
+import { VrBlende, VrTunnel } from './vr-blende.js';
 import { VrInfoSymbole } from './vr-infosymbole.js';
 
 const $ = (id) => document.getElementById(id);
@@ -50,6 +50,11 @@ const SETTINGS = {
   far: num('far', 30, 12, 60),
   showFps: params.get('fps') === '1',
 };
+// Einstellungen der Startseite (eigener Speicher, getrennt von den anderen Versionen)
+const STORE = 'schule3d.vr.v1';
+const prefs = { tunnel: true };
+try { Object.assign(prefs, JSON.parse(localStorage.getItem(STORE) || '{}')); } catch { /* ohne Speicher */ }
+const savePrefs = () => { try { localStorage.setItem(STORE, JSON.stringify(prefs)); } catch { /* ignorieren */ } };
 
 // ------------------------------------------------------------------ Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: SETTINGS.msaa, powerPreference: 'high-performance' });
@@ -146,6 +151,11 @@ const tafel = new VrTafel(scene);
 const etikett = new VrEtikett();
 const anzeige = new VrAnzeige(camera);
 const blende = new VrBlende(camera);
+const tunnel = new VrTunnel(camera);
+const hinweis = new VrHinweis(camera);
+tunnel.enabled = prefs.tunnel;
+$('set-tunnel').checked = prefs.tunnel;
+$('set-tunnel').addEventListener('change', (e) => { prefs.tunnel = tunnel.enabled = e.target.checked; savePrefs(); });
 const symbole = new VrInfoSymbole(scene, infoPoints);
 if (DESKTOP) { camera.add(etikett.mesh); etikett.mesh.position.set(0, -0.12, -0.7); }
 
@@ -229,7 +239,7 @@ ui.status.textContent = 'Oberflächen und Bilder werden geladen …';
 await Promise.all([waitForTextures(), sky.load(TIME_OF_DAY.mittag.sky?.photo)]);
 // Tafeln, Etikett, Anzeige und Symbole zeichnen in ihre eigene Leinwand: nicht verkleinern (sonst bleiben sie leer).
 const keepTextures = [...devices.boards.values()].map((board) => board.texture)
-  .concat([tafel, etikett, anzeige].map((t) => t.surface.texture), symbole.normal.map, symbole.station.map);
+  .concat([tafel, etikett, anzeige, hinweis].map((t) => t.surface.texture), symbole.normal.map, symbole.station.map, tunnel.texture);
 const textureStats = shrinkTextures(scene, { keep: keepTextures, maxSize: 512 });
 ui.tour.textContent = 'Lädt Grafik …';
 ui.status.textContent = 'Die Grafik wird vorbereitet …';
@@ -239,6 +249,8 @@ tafel.mesh.visible = true;
 etikett.set('Vorbereitung');
 anzeige.mesh.visible = true;
 blende.prepare = true;
+tunnel.prepare = true;
+hinweis.show('Vorbereitung', 0.01);
 symbole.prepare = true;
 input.prepare = true;
 camera.layers.mask = visibility.allMask;
@@ -248,6 +260,8 @@ tafel.hide(); tafel.mesh.visible = false;
 etikett.set('');
 anzeige.mesh.visible = SETTINGS.showFps;
 blende.prepare = false;
+tunnel.prepare = false;
+hinweis.update(1);
 symbole.prepare = false;
 input.prepare = false;
 
@@ -279,6 +293,11 @@ const frame = (now) => {
     if (pad.b) tour.prev();
     if (pad.x) tafel.toggle();
     if (pad.y) anzeige.toggle();
+    if (pad.height) {
+      const d = player.toggleHeight();
+      hinweis.show(d ? `Augenhöhe angeglichen (${d > 0 ? '+' : '−'}${Math.round(Math.abs(d) * 100)} cm) · nochmal: echte Höhe`
+        : 'Echte Augenhöhe');
+    }
   }
   player.joy.x = pad.move.x;
   player.joy.y = pad.move.y;
@@ -309,6 +328,8 @@ const frame = (now) => {
   tafel.setFooter(footer());
   tafel.update(elapsed, head);
   blende.update(elapsed);
+  tunnel.update(elapsed, player.active && player.joystickActive);
+  hinweis.update(elapsed);
 
   // Hinweis, wenn sich nach dem Start keine Controller melden (bekanntes Problem des Quest-Browsers).
   if (controllerTimer > 0 && presenting && (controllerTimer -= elapsed) <= 0 && !input.connected) {
@@ -349,5 +370,5 @@ ui.status.textContent = xrSupported
 
 // Für Tests in der Browser-Konsole
 window.game = { THREE, scene, camera, rig, head, renderer, player, world, collision, interactions, materials, lighting, audio,
-  visibility, sky, devices, infoPoints, tour, tafel, anzeige, blende, symbole, input, detailCulling, settings: SETTINGS,
+  visibility, sky, devices, infoPoints, tour, tafel, anzeige, blende, tunnel, hinweis, symbole, input, prefs, detailCulling, settings: SETTINGS,
   stats: { removedLights, convertedMaterials, textures: textureStats } };

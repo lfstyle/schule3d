@@ -39,7 +39,7 @@
   <!-- Probemodus am PC (vr.html?desktop): Tastenhilfe -->
   <div id="probe-hilfe" class="hidden">
     <b>VR-Probemodus</b> · Maus ziehen: Kopf · W A S D: linker Stick · J / L: drehen · F: Abzug ·
-    N: A (weiter) · B: B (zurück) · X: Tafel · Y: Bildrate · Esc: Menü
+    N: A (weiter) · B: B (zurück) · X: Tafel · Y: Bildrate · H: Augenhöhe · Esc: Menü
   </div>
 
   <!-- Startseite (vor dem Aufsetzen und nach dem Verlassen von VR) -->
@@ -54,12 +54,15 @@
         <button id="start-btn" class="secondary-btn" type="button" disabled>Frei erkunden in VR</button>
       </div>
       <button id="retry-btn" class="secondary-btn hidden" type="button" onclick="location.reload()">Erneut laden</button>
+      <label class="vr-schalter"><input id="set-tunnel" type="checkbox" checked>
+        <span><b>Tunnelblick beim Laufen</b> – der Bildrand wird dunkler, solange du mit dem Stick läufst (gegen Übelkeit)</span></label>
       <p class="vr-tipp"><b>Controller reagieren nicht?</b> VR kurz verlassen (Meta-Taste) und hier neu starten.</p>
       <details class="help" open><summary>So bewegst du dich in VR</summary>
         <ul class="controls">
           <li><b>Kopf</b><span>umsehen</span></li>
           <li><b>Linker Stick</b><span>laufen (in Blickrichtung)</span></li>
           <li><b>Rechter Stick</b><span>nach links/rechts: drehen</span></li>
+          <li><b>Rechten Stick drücken</b><span>im Sitzen: Augenhöhe wie im Stehen (nochmal: echte Höhe)</span></li>
           <li><b>Abzug</b><span>auf eine Tür oder ein (i) zeigen und drücken: öffnen</span></li>
           <li><b>A / B</b><span>Rundgang: nächste / vorherige Station</span></li>
           <li><b>X</b><span>Tafel mit dem Text ein/aus</span></li>

@@ -23,6 +23,8 @@ export class VrPlayer extends TouchPlayer {
     this.walkSpeed = 1.7;
     this.turnStep = Math.PI / 6;     // 30°
     this.rigYaw = 0;
+    this.heightOffset = 0;           // Augenhöhe angleichen (rechter Stick drücken), z. B. im Sitzen
+    this.standardEye = 1.62;         // m über dem Boden, wie stehend
     this._offset = new THREE.Vector3();   // Kopf relativ zum Rig-Ursprung, in Weltrichtung (nur x/z)
     this._ready = true;
     // Keine Tasten (Sprint, Sprung, Ducken, Zoom, WASD): Eingaben kommen nur über joy.
@@ -57,7 +59,7 @@ export class VrPlayer extends TouchPlayer {
 
   _placeRig() {
     this._headOffset(this._offset);
-    this.rig.position.set(this.position.x - this._offset.x, this.viewY, this.position.z - this._offset.z);
+    this.rig.position.set(this.position.x - this._offset.x, this.viewY + this.heightOffset, this.position.z - this._offset.z);
     this.rig.rotation.set(0, this.rigYaw, 0);
     this.rig.updateMatrixWorld(true);
   }
@@ -70,6 +72,18 @@ export class VrPlayer extends TouchPlayer {
   teleport(x, y, z, yaw = this.headYaw, pitch = 0) {
     super.teleport(x, y, z, yaw, pitch);
     this._align(yaw);
+  }
+
+  /**
+   * Rechten Stick drücken: Augenhöhe auf standardEye angleichen (im Sitzen sonst ≈ 1,2 m), nochmal: echte Höhe.
+   * Gibt die Änderung in m zurück (0 = echte Höhe bzw. passt schon).
+   */
+  toggleHeight() {
+    const real = this.headCamera.position.y;
+    this.heightOffset = this.heightOffset || real < 0.3 ? 0 : this.standardEye - real;
+    if (Math.abs(this.heightOffset) < 0.05) this.heightOffset = 0;
+    this._placeRig();
+    return this.heightOffset;
   }
 
   /** Rechter Stick: ruckartig um den Kopf drehen (dir = −1 links, +1 rechts). */

@@ -1,6 +1,6 @@
 {
-    "commit":  "3432dea",
-    "message":  "VR-Version für Meta Quest 2 (vr.html), erster Teststand",
-    "deployed":  "2026-11-25T16:40:23+01:00",
+    "commit":  "2cb23a3",
+    "message":  "VR: Tunnelblick beim Laufen und Augenhöhe angleichen (Komfort)",
+    "deployed":  "2026-11-25T17:14:02+01:00",
     "telemetry":  false
 }

@@ -8,6 +8,17 @@
   line-height: 1.45;
 }
 
+.vr-schalter {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 14px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  cursor: pointer;
+}
+.vr-schalter input { flex: none; width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--accent); }
+
 #probe-hilfe {
   position: fixed;
   left: 50%;
