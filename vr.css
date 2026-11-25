@@ -1,0 +1,25 @@
+/* VR-Version (vr.html): nur die Startseite und der Probemodus. In der Brille ist alles 3D (js/vr/). */
+.vr-tipp {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(230, 196, 106, 0.14);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+#probe-hilfe {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 5;
+  max-width: calc(100vw - 24px);
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(20, 22, 26, 0.82);
+  color: #eef0f2;
+  font: 13px/1.4 system-ui, sans-serif;
+  text-align: center;
+  pointer-events: none;
+}

@@ -1,6 +1,6 @@
 {
-    "commit":  "c0e1e38",
-    "message":  "Leichte Rundgang-Version für PC und iPad (rundgang.html)",
-    "deployed":  "2026-11-17T15:30:18+01:00",
+    "commit":  "3432dea",
+    "message":  "VR-Version für Meta Quest 2 (vr.html), erster Teststand",
+    "deployed":  "2026-11-25T16:40:23+01:00",
     "telemetry":  false
 }

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <!-- VR-Version (vr.html): Rundgang mit der Meta Quest 2 im Browser (WebXR). Gleiche Räume wie index.html und rundgang.html,
+       Grafik wie die leichte Version. Code in js/vr/. Probemodus ohne Brille: vr.html?desktop -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14161a">
+  <title>Schule 3D – VR (Meta Quest)</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="vr.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/build/three.module.js",
+        "three/addons/": "./vendor/three/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="vr">
+  <div id="app"></div>
+
+  <!-- Unsichtbare HUD-Elemente: tour.js, info-points.js und interaction.js schreiben hier hinein. In VR zeigt die
+       3D-Tafel (js/vr/vr-tafel.js) denselben Inhalt. -->
+  <div id="hud" class="hidden" aria-hidden="true">
+    <div id="info-markers"></div>
+    <div id="prompt" class="hidden"></div>
+    <aside id="info-card" class="hidden">
+      <div id="info-head"><p id="info-kicker" class="hidden"></p><div id="tour-dots" class="hidden"></div></div>
+      <h2 id="info-title"></h2>
+      <span id="info-badge" class="hidden">Entwurf</span>
+      <p id="info-text"></p>
+      <div id="tour-bar" class="hidden"></div>
+    </aside>
+  </div>
+
+  <!-- Probemodus am PC (vr.html?desktop): Tastenhilfe -->
+  <div id="probe-hilfe" class="hidden">
+    <b>VR-Probemodus</b> · Maus ziehen: Kopf · W A S D: linker Stick · J / L: drehen · F: Abzug ·
+    N: A (weiter) · B: B (zurück) · X: Tafel · Y: Bildrate · Esc: Menü
+  </div>
+
+  <!-- Startseite (vor dem Aufsetzen und nach dem Verlassen von VR) -->
+  <div id="overlay">
+    <div class="panel scrollable">
+      <p class="eyebrow">Ein Rundgang durch unsere Schule</p>
+      <h1 id="overlay-title">Schule 3D in VR</h1>
+      <p class="lead" id="overlay-text">Für die Meta Quest im Browser. Brille aufsetzen, diese Seite im Meta Quest Browser öffnen und „VR starten“ drücken.</p>
+      <p id="loading-status" role="status" aria-live="polite">Die Schule wird vorbereitet …</p>
+      <div id="menu-buttons">
+        <button id="tour-btn" class="primary-btn" type="button" disabled>Lädt …</button>
+        <button id="start-btn" class="secondary-btn" type="button" disabled>Frei erkunden in VR</button>
+      </div>
+      <button id="retry-btn" class="secondary-btn hidden" type="button" onclick="location.reload()">Erneut laden</button>
+      <p class="vr-tipp"><b>Controller reagieren nicht?</b> VR kurz verlassen (Meta-Taste) und hier neu starten.</p>
+      <details class="help" open><summary>So bewegst du dich in VR</summary>
+        <ul class="controls">
+          <li><b>Kopf</b><span>umsehen</span></li>
+          <li><b>Linker Stick</b><span>laufen (in Blickrichtung)</span></li>
+          <li><b>Rechter Stick</b><span>nach links/rechts: drehen</span></li>
+          <li><b>Abzug</b><span>auf eine Tür oder ein (i) zeigen und drücken: öffnen</span></li>
+          <li><b>A / B</b><span>Rundgang: nächste / vorherige Station</span></li>
+          <li><b>X</b><span>Tafel mit dem Text ein/aus</span></li>
+          <li><b>Y</b><span>Bildrate anzeigen (für Tests)</span></li>
+        </ul>
+        <p class="version">Wird dir unwohl, kurz stehen bleiben oder die Brille absetzen. Echtes Herumgehen geht nur im Spielbereich der Quest.</p>
+      </details>
+      <p class="version">VR-Version (einfache Grafik) · <a href="index.html">volle Version</a> · <a href="rundgang.html">leichte Version</a></p>
+    </div>
+  </div>
+  <noscript>Dieses Spiel benötigt JavaScript und WebGL.</noscript>
+  <script type="module" src="js/vr/start-vr.js"></script>
+</body>
+</html>

@@ -12,6 +12,7 @@ export class InteractionSystem {
     this.current = null;
     this.enabled = false;
     this.override = null;          // z. B. "Ablegen" beim Tragen
+    this.aim = null;               // optional (VR): aim(raycaster) setzt den Zielstrahl selbst, sonst Bildschirmmitte
     this.raycaster = new THREE.Raycaster();
     this.raycaster.far = 4;
     this._center = new THREE.Vector2(0, 0);
@@ -77,7 +78,8 @@ export class InteractionSystem {
     let selectedHit = null, selectedItem = null;
     if (this.enabled && !this.override && this.targets.length) {
       this.camera.updateMatrixWorld();
-      this.raycaster.setFromCamera(this._center, this.camera);
+      if (this.aim) this.aim(this.raycaster);
+      else this.raycaster.setFromCamera(this._center, this.camera);
       const hits = this.raycaster.intersectObjects(this.targets, true);
       for (const hit of hits) {
         if (hit.object.userData.held) continue;

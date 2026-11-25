@@ -8,7 +8,10 @@ const RATIO = 0.012;        // ≈ 7 Bildpunkte Radius bei 820 Punkten Bildhöhe
 const MIN_DISTANCE = 8;     // m
 const MAX_RADIUS = 3;       // größere Teile (Wände, Böden, zusammengefasste Gruppen) bleiben immer
 
-export function installDetailCulling(scene, camera) {
+// Optional (VR-Version): cameras = weitere Kameras, für die ebenfalls ausgeblendet wird (z. B. die XR-Kamera beider
+// Augen), ratio/minDistance = strengere Grenzen. Ohne Angabe gelten die Werte oben.
+export function installDetailCulling(scene, camera, { cameras = [], ratio = RATIO, minDistance = MIN_DISTANCE } = {}) {
+  const forCamera = (cam) => cam === camera || cameras.includes(cam);
   const items = [];
   const sphere = new THREE.Sphere();
   scene.updateMatrixWorld(true);
@@ -23,14 +26,14 @@ export function installDetailCulling(scene, camera) {
   const before = scene.onBeforeRender, after = scene.onAfterRender;
   scene.onBeforeRender = (renderer, s, cam, target) => {
     before.call(scene, renderer, s, cam, target);
-    if (cam !== camera || !stats.enabled) return;
+    if (!forCamera(cam) || !stats.enabled) return;
     cam.getWorldPosition(eye);
     for (const { o, local } of items) {
       if (!o.visible) continue;
       center.copy(local.center).applyMatrix4(o.matrixWorld);
       const d = center.distanceTo(eye);
       // Weltradius ≈ lokaler Radius × größte Skalierung (Teile sind kaum verzerrt skaliert).
-      if (d > MIN_DISTANCE && local.radius * o.matrixWorld.getMaxScaleOnAxis() < RATIO * d) { o.visible = false; hidden.push(o); }
+      if (d > minDistance && local.radius * o.matrixWorld.getMaxScaleOnAxis() < ratio * d) { o.visible = false; hidden.push(o); }
     }
     stats.hidden = hidden.length;
   };
